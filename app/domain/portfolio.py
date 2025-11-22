@@ -1,18 +1,27 @@
-from app.domain.investment import Investment
+from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy.orm import relationship
+from app.database.config import Base
 
-class Portfolio:
-    def __init__(self, id: int, name: str, description: str, balance: float = 0.0):
-        self.id = id
+class Portfolio(Base):
+    __tablename__ = "portfolios"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(100), nullable=False)
+    description = Column(String(255))  
+    balance = Column(Float, default=0.0)
+
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+
+    # Relationship back to User
+    user = relationship("User", back_populates="portfolios")
+    investments = relationship("Investment", back_populates="portfolio", cascade="all, delete-orphan")
+    transactions = relationship("TradeTransaction")
+
+    def __init__(self, name, description, balance, user_id):
         self.name = name
         self.description = description
         self.balance = balance
-        self.holdings: list[Investment] = []
-
-    def add_investment(self, investment: Investment):
-        self.holdings.append(investment)
-
-    def remove_investment(self, ticker: str):
-        self.holdings = [i for i in self.holdings if i.ticker != ticker]
+        self.user_id = user_id
 
     def __repr__(self):
-        return f"Portfolio({self.id}: {self.name}, Balance: ${self.balance:.2f})"
+        return f"Portfolio({self.name}, Balance: ${self.balance:.2f})"

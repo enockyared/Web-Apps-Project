@@ -1,9 +1,20 @@
-class Security:
-    def __init__(self, ticker: str, issuer: str, price: float, available_quantity: int):
-        self.ticker = ticker
+from sqlalchemy import Column, Integer, String, Float
+from app.database.config import Base
+
+class Security(Base):
+    __tablename__ = "securities"
+
+    id = Column(Integer, primary_key=True, index=True)
+    symbol = Column(String(10), unique=True, nullable=False)
+    issuer = Column(String(100), nullable=False)
+    price = Column(Float, nullable=False)
+    available_qty = Column(Integer, nullable=False)
+
+    def __init__(self, symbol, issuer, price, available_qty):
+        self.symbol = symbol
         self.issuer = issuer
         self.price = price
-        self.available_quantity = available_quantity
+        self.available_qty = available_qty
 
     def __repr__(self):
-        return f"{self.ticker} ({self.issuer}) - ${self.price:.2f} | Available: {self.available_quantity}"
+        return f"{self.symbol} ({self.issuer}) - ${self.price:.2f} | Available: {self.available_qty}"

@@ -1,33 +1,28 @@
 from rich.console import Console
 from rich.prompt import Prompt
-from rich.panel import Panel
-from app.services import user_service
+from app.services.user_service import view_users, add_user, delete_user
 
 console = Console()
 
-def manage_users_menu():
-    """Admin-only Manage Users interface."""
+def manage_users_menu(current_user):
     while True:
         console.clear()
-        console.print(Panel.fit("[bold cyan]Manage Users[/bold cyan]", border_style="cyan"))
+        console.print(f"[bold cyan]User Management[/bold cyan] (Logged in as: {current_user.username})")
         console.print("[1] View Users")
         console.print("[2] Add User")
         console.print("[3] Delete User")
-        console.print("[4] Return to Main Menu\n")
+        console.print("[4] Back\n")
 
         choice = Prompt.ask("[bold yellow]Enter your choice[/bold yellow]", choices=["1", "2", "3", "4"])
 
         if choice == "1":
-            user_service.view_users()
-            input("\nPress Enter to continue...")
-
+            view_users()
+            
         elif choice == "2":
-            user_service.add_user()
-            input("\nPress Enter to continue...")
+            add_user(current_user)
 
         elif choice == "3":
-            user_service.delete_user()
-            input("\nPress Enter to continue...")
+            delete_user(current_user)
 
         elif choice == "4":
             break
