@@ -1,12 +1,17 @@
 from rich.console import Console
 from rich.prompt import Prompt
 from rich.panel import Panel
-import db
+from app.services.user_service import get_user
 
 console = Console()
 
+def show_error(message: str) -> None:
+    console.print(f"[bold red]Error:[/bold red] {message}")
+
+def show_success(message: str) -> None:
+    console.print(f"[bold green]{message}[/bold green]")
+
 def login_menu():
-    """Display the login menu and handle user authentication."""
     while True:
         console.clear()
         console.print(Panel.fit("[bold cyan]Welcome to the Investment App[/bold cyan]", border_style="cyan"))
@@ -23,12 +28,13 @@ def login_menu():
             username = Prompt.ask("[bold cyan]Enter username[/bold cyan]")
             password = Prompt.ask("[bold magenta]Enter password[/bold magenta]", password=True)
 
-            user = db.get_user(username)
+            user = get_user(username)
+
             if user and user.password == password:
-                db.set_logged_in_user(user)
-                console.print(f"\n[bold green]Login successful! Welcome, {user.first_name}.[/bold green]\n")
+                show_success(f"\nLogin successful. Welcome {user.first_name}!\n")
+                
                 from app.cli.main_menu import main_menu
-                main_menu()
-                break
+                return main_menu(user)  
+
             else:
-                console.print("[bold red]Invalid username or password. Please try again.[/bold red]\n")
+                show_error("Invalid username or password. Please try again.")

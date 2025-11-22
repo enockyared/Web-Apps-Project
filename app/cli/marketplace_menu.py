@@ -4,7 +4,7 @@ from app.services import marketplace_service
 
 console = Console()
 
-def marketplace_menu():
+def marketplace_menu(current_user):
     """Menu for viewing and buying securities."""
     while True:
         console.clear()
@@ -18,6 +18,6 @@ def marketplace_menu():
         if choice == "1":
             marketplace_service.view_securities()
         elif choice == "2":
-            marketplace_service.place_buy_order()
+            marketplace_service.place_buy_order(current_user)
         elif choice == "3":
             break
