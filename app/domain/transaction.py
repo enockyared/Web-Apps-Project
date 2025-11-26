@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Float, String, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, Float, String, ForeignKey, DateTime, func
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.database.config import Base
@@ -7,13 +7,13 @@ class TradeTransaction(Base):
     __tablename__ = "transactions"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    portfolio_id = Column(Integer, ForeignKey("portfolios.id"), nullable=False)
-    security_symbol = Column(String(10), nullable=False)
-    transaction_type = Column(String(10), nullable=False) 
-    quantity = Column(Float, nullable=False)
-    price = Column(Float, nullable=False)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    portfolio_id = Column(Integer, ForeignKey("portfolios.id"))
+    security_symbol = Column(String(10))
+    transaction_type = Column(String(10))
+    quantity = Column(Float)
+    price = Column(Float)
+    timestamp = Column(DateTime, default=func.now())
 
     user = relationship("User", back_populates="transactions")
     portfolio = relationship("Portfolio")

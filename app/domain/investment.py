@@ -6,10 +6,10 @@ class Investment(Base):
     __tablename__ = "investments"
 
     id = Column(Integer, primary_key=True, index=True)
-    portfolio_id = Column(Integer, ForeignKey("portfolios.id"), nullable=False)
-    security_symbol = Column(String(10), nullable=False)  
-    quantity = Column(Float, nullable=False)
-    purchase_price = Column(Float, nullable=False)
+    portfolio_id = Column(Integer, ForeignKey("portfolios.id"))
+    security_symbol = Column(String(10))
+    quantity = Column(Float)
+    purchase_price = Column(Float)
 
     portfolio = relationship("Portfolio", back_populates="investments")
 

@@ -10,12 +10,11 @@ class Portfolio(Base):
     description = Column(String(255))  
     balance = Column(Float, default=0.0)
 
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"))
 
     # Relationship back to User
     user = relationship("User", back_populates="portfolios")
-    investments = relationship("Investment", back_populates="portfolio", cascade="all, delete-orphan")
-    transactions = relationship("TradeTransaction")
+    investments = relationship("Investment", back_populates="portfolio")
 
     def __init__(self, name, description, balance, user_id):
         self.name = name
